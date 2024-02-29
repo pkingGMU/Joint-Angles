@@ -1,0 +1,51 @@
+import cv2
+import numpy as np
+
+# Load OpenPose
+net = cv2.dnn.readNetFromTensorflow("model.prototxt")
+inWidth = 368
+inHeight = 368
+thr = 0.2
+
+# Load video
+cap = cv2.VideoCapture("path_to_video.mp4")
+
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
+    
+    frameWidth = frame.shape[1]
+    frameHeight = frame.shape[0]
+    
+    # Prepare input blob
+    blob = cv2.dnn.blobFromImage(frame, 1.0 / 255, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
+    net.setInput(blob)
+    
+    # Run forward pass
+    out = net.forward()
+    
+    # Get detected keypoints
+    points = []
+    for i in range(len(out[0])):
+        probMap = out[0, i, :, :]
+        minVal, prob, minLoc, point = cv2.minMaxLoc(probMap)
+        if prob > thr:
+            x = (frameWidth * point[0]) / out.shape[3]
+            y = (frameHeight * point[1]) / out.shape[2]
+            points.append((int(x), int(y)))
+        else:
+            points.append(None)
+    
+    # Draw detected keypoints
+    for point in points:
+        if point:
+            cv2.circle(frame, point, 4, (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
+    
+    # Show frame
+    cv2.imshow("Frame", frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
