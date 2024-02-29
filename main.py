@@ -4,6 +4,7 @@
 import cv2
 from ultralytics import YOLO
 import numpy as np
+import pprint
 
 # Static Variables
 saved_frames = []
@@ -52,8 +53,11 @@ while cap.isOpened():
         break
     # Use frame to determine model annotation
     annotation = model.predict(frame, classes=0)
-    if index == 1:
-        saved_frames.append(annotation.numpy())
+    
+    # Create list of results object
+    saved_frames.append(model.predict(frame))
+        
+        
 
     # Overaly the annotation onto the webcam view
     annotated_frame = annotation[0].plot(labels=True, boxes=False, conf=1.0)
@@ -93,7 +97,7 @@ if recording:
 cap.release()
 cv2.destroyAllWindows()
 
-print(saved_frames)
+pprint.pprint(saved_frames[20][0].keypoints.xyn)
     
 
 
