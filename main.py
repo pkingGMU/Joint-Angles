@@ -9,6 +9,7 @@ import pprint
 
 # Local Imports
 import Base_Model
+import Keypoints
 
 # Static Variables
 saved_frames = []
@@ -97,29 +98,8 @@ if recording:
 cap.release()
 cv2.destroyAllWindows()
 
-
-# Loop through saved frames and get keypoints for frames that are imported into numpy array
-for frm in saved_frames:
-
-    # If the information at the object 'frm' is equal to 'keypoints'
-    if hasattr(frm[0], 'keypoints'):
-
-        # local variable to store all keypoints
-        keypoints = frm[0].keypoints
-
-        #local variable to turn keypoints into a readable numpy array
-        keypoints_numpy = keypoints.xyn.cpu().numpy()[0]
-
-        #New instance of GetKeypoint
-        get_keypoint = Base_Model.GetKeypoint()
-
-        #Get nose coordinates
-        nose_x, nose_y = keypoints_numpy[get_keypoint.NOSE]
-
-        #print nose coordinates
-        pprint.pprint(f'X: {nose_x} Y: {nose_y}')
-    else:
-        print('Didnt Work')
+results = Keypoints.Keypoints(saved_frames, 'RIGHT KNEE')
+print(results)
 
         
 
