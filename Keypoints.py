@@ -1,8 +1,20 @@
 import Base_Model
-import Distance_Between_Points
 import numpy as np
+import Degree_Calculation
 
-results = []
+# What we want to return later
+results = {
+    'TrunkROM': None,
+    'HipROM': None,
+    'KneeROM': None,
+    'AnkleROM': None
+}
+
+# List of each angle for each frame
+tempTrunk = []
+temp_knee_right = []
+temp_knee_left = []
+tempAnkle = [] 
 
 def Keypoints(saved_frame_list, joint_angle_desired):
     # Loop through saved frames and get keypoints for frames that are imported into numpy array
@@ -30,24 +42,35 @@ def Keypoints(saved_frame_list, joint_angle_desired):
                     right_hip = keypoints_numpy[get_keypoint.RIGHT_HIP]
                     right_knee = keypoints_numpy[get_keypoint.RIGHT_KNEE]
                     right_ankle = keypoints_numpy[get_keypoint.RIGHT_ANKLE]
-                    
-                    # Calculate angles
-                    e1 = right_knee-right_hip; e2 = right_ankle-right_hip
-                    denom = np.linalg.norm(e1) * np.linalg.norm(e2)
-                    d1 = np.rad2deg(np.arccos(np.dot(e1, e2)/denom))
-
-                    e1 = right_ankle-right_knee; e2 = right_hip-right_knee
-                    denom = np.linalg.norm(e1) * np.linalg.norm(e2)
-                    d2 = np.rad2deg(np.arccos(np.dot(e1, e2)/denom))
-
-                    d3 = 180-d1-d2
-
-                    print (f' Dont care: {d1}, Angle of Knee for frame: {d2}, Dont care{d3}')
-
-                case 'HIP':
-                    pass
+                    temp_knee_right.append(Degree_Calculation.degrees(right_hip,right_knee,right_ankle))
+                case 'LEFT KNEE':
+                    left_hip = keypoints_numpy[get_keypoint.LEFT_HIP]
+                    left_knee = keypoints_numpy[get_keypoint.LEFT_KNEE]
+                    left_ankle = keypoints_numpy[get_keypoint.LEFT_ANKLE]
+                    temp_knee_left.append(Degree_Calculation.degrees(left_hip,left_knee,left_ankle))
                 case 'ANKLE':
                     pass
+    
+    match joint_angle_desired:
+        case 'TRUNK':
+            pass
+
+        case 'RIGHT KNEE':
+            results['KneeROM'] = temp_knee_right[0] - temp_knee_right[1]
+        case 'LEFT KNEE':
+            results['KneeROM'] = temp_knee_left[0] - temp_knee_left[1]
+        case 'ANKLE':
+            pass
+
+
+
+
+
+
+
+    
+
+    return results
 
             
 
