@@ -5,34 +5,13 @@ import cv2
 from ultralytics import YOLO
 import numpy as np
 import pprint
-from pydantic import BaseModel
+
 
 # Local Imports
 import Base_Model
 
 # Static Variables
 saved_frames = []
-
-# Base Model Class from pydantic
-class GetKeypoint(BaseModel):
-
-    NOSE:           int = 0
-    LEFT_EYE:       int = 1
-    RIGHT_EYE:      int = 2
-    LEFT_EAR:       int = 3
-    RIGHT_EAR:      int = 4
-    LEFT_SHOULDER:  int = 5
-    RIGHT_SHOULDER: int = 6
-    LEFT_ELBOW:     int = 7
-    RIGHT_ELBOW:    int = 8
-    LEFT_WRIST:     int = 9
-    RIGHT_WRIST:    int = 10
-    LEFT_HIP:       int = 11
-    RIGHT_HIP:      int = 12
-    LEFT_KNEE:      int = 13
-    RIGHT_KNEE:     int = 14
-    LEFT_ANKLE:     int = 15
-    RIGHT_ANKLE:    int = 16
 
 # Use existing model for pose
 model = YOLO('yolov8n-pose.pt')
@@ -132,7 +111,7 @@ for frm in saved_frames:
         keypoints_numpy = keypoints.xyn.cpu().numpy()[0]
 
         #New instance of GetKeypoint
-        get_keypoint = GetKeypoint()
+        get_keypoint = Base_Model.GetKeypoint()
 
         #Get nose coordinates
         nose_x, nose_y = keypoints_numpy[get_keypoint.NOSE]
