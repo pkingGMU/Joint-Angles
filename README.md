@@ -2,6 +2,7 @@ This python script allows you to determine your range of motion at different joi
 
 CURRENT VERSION:
 Can determine: RIGHT HIP ROM/LEFT HIP ROM/RIGHT KNEE ROM/LEFT KNEE ROM/RIGHT SHOULDER FLEXION ROM/LEFT SHOULDER FLEXION ROM
+Run main.py and press 1 to save frame at the start of the motion and then press 1 again to save frame at the end of a motion. press q to exit
 
 TODO: 
 1. Add id for each client
@@ -11,6 +12,7 @@ TODO:
 5. Add dialog box to choose which joint you want instead of defining it in the code
 
 How to install:
+
 Steps to install python and run this script:
 
 Download python https://www.python.org/downloads/
