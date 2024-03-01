@@ -4,7 +4,8 @@
 import cv2
 from ultralytics import YOLO
 import numpy as np
-import pprint
+import os
+import pandas as pd
 
 
 # Local Imports
@@ -101,6 +102,24 @@ cv2.destroyAllWindows()
 results = Keypoints.Keypoints(saved_frames, 'RIGHT KNEE')
 print(results)
 
+# Write results to excel workbook
+# Excel file
+
+excel_file = "ROM.xlsx"
+
+# Check if the Excel file already exists
+if not os.path.exists(excel_file):
+    # Create an empty DataFrame
+    df = pd.DataFrame(columns=results.keys())  # Define columns as needed
+else:
+    # Load existing Excel file into DataFrame
+    df = pd.read_excel(excel_file)
+
+# Append the dictionary as a new row to the DF
+df.loc[len(df.index)] = results
+
+# Write the updata DataFram to the Excel File
+df.to_excel(excel_file, index=False)
         
 
     
