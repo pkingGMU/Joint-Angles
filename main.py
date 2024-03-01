@@ -99,8 +99,9 @@ if recording:
 cap.release()
 cv2.destroyAllWindows()
 
-# input our saved frames (should be top of motion then bottom of motion) and what we are looking for
-results = Keypoints.Keypoints(saved_frames, ['RIGHT KNEE', 'RIGHT HIP'])
+# Input our saved frames (should be top of motion then bottom of motion) and what we are looking for
+results = Keypoints.Keypoints(saved_frames, ['RIGHT KNEE', 'RIGHT HIP', 'RIGHT SHOULDER FLEXION'])
+# Console
 print(results)
 
 # Write results to excel workbook
