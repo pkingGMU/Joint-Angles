@@ -14,65 +14,85 @@ results = {
 tempTrunk = []
 temp_knee_right = []
 temp_knee_left = []
+temp_hip_right = []
+temp_hip_left = []
 tempAnkle = [] 
 
-def Keypoints(saved_frame_list, joint_angle_desired):
-    # Checks for two saved frames
-    if len(saved_frame_list) == 2:
-        # Loop through saved frames and get keypoints for frames that are imported into numpy array
-        for frm in saved_frame_list:
+def Keypoints(saved_frame_list, joint_angle_desired: list):
 
-            # If the information at the object 'frm' is equal to 'keypoints'
-            if hasattr(frm[0], 'keypoints'):
+    # Iterate through each joint_angle_desired
+    for joint in joint_angle_desired:
 
-                # local variable to store all keypoints
-                keypoints = frm[0].keypoints
+        # Checks for two saved frames
+        if len(saved_frame_list) == 2:
+            # Loop through saved frames and get keypoints for frames that are imported into numpy array
+            for frm in saved_frame_list:
 
-                # local variable to turn keypoints into a readable numpy array
-                keypoints_numpy = keypoints.xyn.cpu().numpy()[0]
+                # If the information at the object 'frm' is equal to 'keypoints'
+                if hasattr(frm[0], 'keypoints'):
 
-                # New instance of GetKeypoint
-                get_keypoint = Base_Model.GetKeypoint()
+                    # local variable to store all keypoints
+                    keypoints = frm[0].keypoints
 
-                # Get X,Y coordinates for the appropriate angle desired
-                match joint_angle_desired:
+                    # local variable to turn keypoints into a readable numpy array
+                    keypoints_numpy = keypoints.xyn.cpu().numpy()[0]
 
-                    case 'TRUNK':
-                        pass
+                    # New instance of GetKeypoint
+                    get_keypoint = Base_Model.GetKeypoint()
 
-                    case 'RIGHT KNEE':
-                        right_hip = keypoints_numpy[get_keypoint.RIGHT_HIP]
-                        right_knee = keypoints_numpy[get_keypoint.RIGHT_KNEE]
-                        right_ankle = keypoints_numpy[get_keypoint.RIGHT_ANKLE]
-                        temp_knee_right.append(Degree_Calculation.degrees(right_hip,right_knee,right_ankle))
-                    case 'LEFT KNEE':
-                        left_hip = keypoints_numpy[get_keypoint.LEFT_HIP]
-                        left_knee = keypoints_numpy[get_keypoint.LEFT_KNEE]
-                        left_ankle = keypoints_numpy[get_keypoint.LEFT_ANKLE]
-                        temp_knee_left.append(Degree_Calculation.degrees(left_hip,left_knee,left_ankle))
-                    case 'ANKLE':
-                        pass
+                    # Get X,Y coordinates for the appropriate angle desired
+                    match joint:
+
+                        case 'TRUNK':
+                            pass
+
+                        case 'RIGHT KNEE':
+                            right_hip = keypoints_numpy[get_keypoint.RIGHT_HIP]
+                            right_knee = keypoints_numpy[get_keypoint.RIGHT_KNEE]
+                            right_ankle = keypoints_numpy[get_keypoint.RIGHT_ANKLE]
+                            temp_knee_right.append(Degree_Calculation.degrees(right_hip,right_knee,right_ankle))
+                        case 'LEFT KNEE':
+                            left_hip = keypoints_numpy[get_keypoint.LEFT_HIP]
+                            left_knee = keypoints_numpy[get_keypoint.LEFT_KNEE]
+                            left_ankle = keypoints_numpy[get_keypoint.LEFT_ANKLE]
+                            temp_knee_left.append(Degree_Calculation.degrees(left_hip,left_knee,left_ankle))
+                        case 'RIGHT HIP':
+                            nose = keypoints_numpy[get_keypoint.NOSE]
+                            right_hip = keypoints_numpy[get_keypoint.RIGHT_HIP]
+                            right_knee = keypoints_numpy[get_keypoint.RIGHT_KNEE]
+                            temp_hip_right.append(Degree_Calculation.degrees(nose,right_hip,right_knee))
+                        case 'LEFT HIP':
+                            nose = keypoints_numpy[get_keypoint.NOSE]
+                            left_hip = keypoints_numpy[get_keypoint.LEFT_HIP]
+                            left_knee = keypoints_numpy[get_keypoint.LEFT_KNEE]
+                            temp_hip_right.append(Degree_Calculation.degrees(nose,left_hip,left_knee))
+                        case 'ANKLE':
+                            pass
+            
+            match joint:
+                case 'TRUNK':
+                    pass
+
+                case 'RIGHT KNEE':
+                    results['KneeROM'] = temp_knee_right[0] - temp_knee_right[1]
+                case 'LEFT KNEE':
+                    results['KneeROM'] = temp_knee_left[0] - temp_knee_left[1]
+                case 'RIGHT HIP':
+                    results['HipROM'] = temp_hip_right[0] - temp_hip_right[1]
+                case 'LEFT HIP':
+                    results['HipROM'] = temp_hip_left[0] - temp_hip_left[1]
+                case 'ANKLE':
+                    pass
+        else:
+            return 'You need two saved frames'
+
+
+
+
+
+
+
         
-        match joint_angle_desired:
-            case 'TRUNK':
-                pass
-
-            case 'RIGHT KNEE':
-                results['KneeROM'] = temp_knee_right[0] - temp_knee_right[1]
-            case 'LEFT KNEE':
-                results['KneeROM'] = temp_knee_left[0] - temp_knee_left[1]
-            case 'ANKLE':
-                pass
-    else:
-        return 'You need two saved frames'
-
-
-
-
-
-
-
-    
 
     return results
 
