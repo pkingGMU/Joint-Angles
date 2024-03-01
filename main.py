@@ -104,22 +104,22 @@ print(results)
 
 # Write results to excel workbook
 # Excel file
+if len(saved_frames) == 2:
+    excel_file = "ROM.xlsx"
 
-excel_file = "ROM.xlsx"
+    # Check if the Excel file already exists
+    if not os.path.exists(excel_file):
+        # Create an empty DataFrame
+        df = pd.DataFrame(columns=results.keys())  # Define columns as needed
+    else:
+        # Load existing Excel file into DataFrame
+        df = pd.read_excel(excel_file)
 
-# Check if the Excel file already exists
-if not os.path.exists(excel_file):
-    # Create an empty DataFrame
-    df = pd.DataFrame(columns=results.keys())  # Define columns as needed
-else:
-    # Load existing Excel file into DataFrame
-    df = pd.read_excel(excel_file)
+    # Append the dictionary as a new row to the DF
+    df.loc[len(df.index)] = results
 
-# Append the dictionary as a new row to the DF
-df.loc[len(df.index)] = results
-
-# Write the updata DataFram to the Excel File
-df.to_excel(excel_file, index=False)
+    # Write the updata DataFram to the Excel File
+    df.to_excel(excel_file, index=False)
         
 
     
