@@ -4,3 +4,4 @@ opencv_python_headless==4.8.0.74
 pandas==2.2.1
 pydantic==2.6.3
 ultralytics==8.1.19
+pydantic_core==2.16.3
