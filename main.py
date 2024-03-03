@@ -6,11 +6,37 @@ from ultralytics import YOLO
 import numpy as np
 import os
 import pandas as pd
+import random
 
 
 # Local Imports
 import Base_Model
 import Keypoints
+import Client
+
+### Client information
+## Find the next ID from the ROM.xlsx
+# If ROM.xlsx exists
+if os.path.exists('ROM.xlsx'):
+    # Open the excel file into a dataframe
+    existing_df = pd.read_excel('ROM.xlsx')
+    # Check to make sure there is an ID column
+    if 'ID' in existing_df:
+        # Get our ID column
+        id_column = existing_df['ID']
+        # Make sure the column isn't empy
+        if not id_column.empty:
+            nextID = (existing_df['ID'].max()) + 1
+        else:
+            nextID = 1
+    else:
+        print("ID Column not found")
+
+## TODO: Make an Input
+# Randomly gets an age
+random_age = random.randint(18, 40)
+
+person = Client.Client(ID = nextID, age = random_age)
 
 # Static Variables
 saved_frames = []
@@ -100,7 +126,10 @@ cap.release()
 cv2.destroyAllWindows()
 
 # Input our saved frames (should be top of motion then bottom of motion) and what we are looking for
-results = Keypoints.Keypoints(saved_frames, ['RIGHT KNEE', 'RIGHT HIP', 'RIGHT SHOULDER FLEXION'])
+results = Keypoints.Keypoints(saved_frames, ['RIGHT KNEE'])
+# Input our person information into our dictionary
+results['ID'] = person.id
+results['AGE'] = person.age
 # Console
 print(results)
 
@@ -116,6 +145,7 @@ if len(saved_frames) == 2:
     else:
         # Load existing Excel file into DataFrame
         df = pd.read_excel(excel_file)
+
 
     # Append the dictionary as a new row to the DF
     df.loc[len(df.index)] = results
