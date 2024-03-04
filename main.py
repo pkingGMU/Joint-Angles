@@ -126,7 +126,7 @@ cap.release()
 cv2.destroyAllWindows()
 
 # Input our saved frames (should be top of motion then bottom of motion) and what we are looking for
-results = Keypoints.Keypoints(saved_frames, ['RIGHT KNEE'])
+results = Keypoints.Keypoints(saved_frames, ['RIGHT HIP'])
 # Input our person information into our dictionary
 results['ID'] = person.id
 results['AGE'] = person.age
