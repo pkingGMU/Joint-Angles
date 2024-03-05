@@ -1,4 +1,4 @@
-This python script allows you to determine your range of motion at different joints using your webcam! The results will print to an excel file
+This python script allows you to determine your range of motion at different joints using your webcam! The results will print to an excel file. Still in development from scratch hobby project!
 
 CURRENT VERSION:
 Can determine: RIGHT HIP ROM/LEFT HIP ROM/RIGHT KNEE ROM/LEFT KNEE ROM/RIGHT SHOULDER FLEXION ROM/LEFT SHOULDER FLEXION ROM
