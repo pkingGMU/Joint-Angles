@@ -13,6 +13,7 @@ import random
 import Base_Model
 import Keypoints
 import Client
+import Vertical_Trunk
 
 ### Client information
 ## Find the next ID from the ROM.xlsx
@@ -24,7 +25,7 @@ if os.path.exists('ROM.xlsx'):
     if 'ID' in existing_df:
         # Get our ID column
         id_column = existing_df['ID']
-        # Make sure the column isn't empy
+        # Make sure the column isn't empty
         if not id_column.empty:
             nextID = (existing_df['ID'].max()) + 1
         else:
@@ -79,6 +80,15 @@ while cap.isOpened():
     if not success:
         print("Error")
         break
+
+    ## Check if camera is level
+    # Check function
+    level = Vertical_Trunk.webcam_level(frame)
+
+    # Write text to screen
+    text = "Level" if level else "Not level"
+    cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
     # Use frame to determine model annotation
     annotation = model.predict(frame, classes=0)
     
@@ -126,7 +136,7 @@ cap.release()
 cv2.destroyAllWindows()
 
 # Input our saved frames (should be top of motion then bottom of motion) and what we are looking for
-results = Keypoints.Keypoints(saved_frames, ['RIGHT HIP'])
+results = Keypoints.Keypoints(saved_frames, ['TRUNK'])
 # Input our person information into our dictionary
 results['ID'] = person.id
 results['AGE'] = person.age

@@ -12,8 +12,14 @@ def get_keypoints(saved_frame):
 
 
 def calculate_angles(joint, keypoints):
+    print(keypoints[Base_Model.GetKeypoint().NOSE])
+    print([(keypoints[Base_Model.GetKeypoint().RIGHT_HIP])[0], 0])
+
     if joint == 'TRUNK':
-        return None
+        return Degree_Calculation.degrees([(keypoints[Base_Model.GetKeypoint().RIGHT_HIP])[0], 0],
+                                          keypoints[Base_Model.GetKeypoint().RIGHT_HIP],
+                                          keypoints[Base_Model.GetKeypoint().RIGHT_EAR]
+                                          )
     elif joint == 'RIGHT KNEE':
         return Degree_Calculation.degrees(keypoints[Base_Model.GetKeypoint().RIGHT_HIP],
                                         keypoints[Base_Model.GetKeypoint().RIGHT_KNEE],
@@ -23,11 +29,11 @@ def calculate_angles(joint, keypoints):
                                         keypoints[Base_Model.GetKeypoint().LEFT_KNEE],
                                         keypoints[Base_Model.GetKeypoint().LEFT_ANKLE])
     elif joint == 'RIGHT HIP':
-        return Degree_Calculation.degrees(keypoints[Base_Model.GetKeypoint().NOSE],
+        return Degree_Calculation.degrees(keypoints[Base_Model.GetKeypoint().RIGHT_EAR],
                                         keypoints[Base_Model.GetKeypoint().RIGHT_HIP],
                                         keypoints[Base_Model.GetKeypoint().RIGHT_KNEE])
     elif joint == 'LEFT HIP':
-        return Degree_Calculation.degrees(keypoints[Base_Model.GetKeypoint().NOSE],
+        return Degree_Calculation.degrees(keypoints[Base_Model.GetKeypoint().LEFT_EAR],
                                         keypoints[Base_Model.GetKeypoint().LEFT_HIP],
                                         keypoints[Base_Model.GetKeypoint().LEFT_KNEE])
     elif joint == 'ANKLE':
@@ -57,6 +63,8 @@ def calculate_rom(joint, angles, results):
         results['RIGHT SHOULDER FLEXION ROM'] = angles[1] - angles[0]
     elif joint == 'LEFT SHOULDER FLEXION':
         results['LEFT SHOULDER FLEXION ROM'] = angles[1] - angles[0]
+    elif joint == 'TRUNK':
+        results['TRUNK ROM'] = angles[1] - angles[0]
 
 
 def Keypoints(saved_frame_list, joint_angle_desired: list):
